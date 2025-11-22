@@ -26,13 +26,6 @@ public class CommitSummaryHistoryService {
     private final CommitSummaryHistoryRepository historyRepository;
 
     @Transactional(readOnly = true)
-    public List<GetCommitSummaryHistoryRes> findByUserId(Long userId) {
-        return historyRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
-            .map(this::toResponse)
-            .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public PageResponse<GetCommitSummaryHistoryRes> findByUserIdWithPaging(Long userId, int page, int size) {
         return historyRepository.findByUserIdWithPaging(userId, page, size);
     }

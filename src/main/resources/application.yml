@@ -49,7 +49,7 @@ openai:
   api:
     key: ${OPENAI_API_KEY:}
   mock:
-    enabled: true
+    enabled: false
 
 slack:
   webhook:

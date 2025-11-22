@@ -35,14 +35,27 @@ public class CommitCheckService {
             repo.getTriggerBranch()
         );
 
-        // 가장 먼저 발견한 whisper 커밋 찾기
+        LocalDateTime lastWhisperCommitTime = repo.getLastWhisperCommitTime();
+
+        // 가장 먼저 발견한 whisper 커밋 찾기 (최신 커밋부터 확인)
         for (GitHubCommitRes commit : commits) {
             String message = commit.commit().message();
 
             if (message != null && message.trim().toLowerCase().startsWith("whisper:")) {
-                log.info("Whisper 커밋 감지 - SHA: {}, 저장소: {}/{}",
-                    commit.sha(), repo.getOwner(), repo.getRepo());
-                return Optional.of(commit);
+                // 커밋 시간 파싱
+                String commitDateStr = commit.commit().author().date();
+                LocalDateTime commitTime = parseCommitTime(commitDateStr);
+
+                // 마지막으로 처리한 커밋 시간과 비교
+                if (lastWhisperCommitTime == null || commitTime.isAfter(lastWhisperCommitTime)) {
+                    log.info("Whisper 커밋 감지 - SHA: {}, 저장소: {}/{}, 커밋 시간: {}, 마지막 처리 시간: {}",
+                        commit.sha(), repo.getOwner(), repo.getRepo(), commitTime, lastWhisperCommitTime);
+                    return Optional.of(commit);
+                } else {
+                    log.debug("저장소 {}/{}에 whisper 커밋이 있지만 이미 처리된 커밋입니다. 커밋 시간: {}, 마지막 처리 시간: {}",
+                        repo.getOwner(), repo.getRepo(), commitTime, lastWhisperCommitTime);
+                    return Optional.empty();
+                }
             }
         }
 
