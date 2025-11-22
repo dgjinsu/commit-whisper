@@ -1,8 +1,8 @@
 package com.example.commitwhisper.controller;
 
-import com.example.commitwhisper.dto.CreateRepoInfoReq;
-import com.example.commitwhisper.dto.GetRepoInfoRes;
-import com.example.commitwhisper.dto.LoginUserRes;
+import com.example.commitwhisper.dto.repo.CreateRepoInfoReq;
+import com.example.commitwhisper.dto.repo.GetRepoInfoRes;
+import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.service.RepoInfoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package com.example.commitwhisper.controller;
 
-import com.example.commitwhisper.dto.GetCommitSummaryHistoryRes;
-import com.example.commitwhisper.dto.GetHistoryDetailRes;
-import com.example.commitwhisper.dto.LoginUserRes;
+import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
+import com.example.commitwhisper.dto.history.GetHistoryDetailRes;
+import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.service.CommitSummaryHistoryService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

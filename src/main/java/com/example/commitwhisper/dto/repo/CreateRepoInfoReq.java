@@ -1,4 +1,4 @@
-package com.example.commitwhisper.dto;
+package com.example.commitwhisper.dto.repo;
 
 public record CreateRepoInfoReq(
         Long userId,

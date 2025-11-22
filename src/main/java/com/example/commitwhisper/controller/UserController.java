@@ -1,10 +1,10 @@
 package com.example.commitwhisper.controller;
 
-import com.example.commitwhisper.dto.GetCommitSummaryHistoryRes;
-import com.example.commitwhisper.dto.GetRepoInfoRes;
-import com.example.commitwhisper.dto.CreateUserReq;
-import com.example.commitwhisper.dto.LoginUserReq;
-import com.example.commitwhisper.dto.LoginUserRes;
+import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
+import com.example.commitwhisper.dto.repo.GetRepoInfoRes;
+import com.example.commitwhisper.dto.user.CreateUserReq;
+import com.example.commitwhisper.dto.user.LoginUserReq;
+import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.service.CommitSummaryHistoryService;
 import com.example.commitwhisper.service.RepoInfoService;
 import com.example.commitwhisper.service.UserService;

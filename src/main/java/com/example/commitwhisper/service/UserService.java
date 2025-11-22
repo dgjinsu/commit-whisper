@@ -1,8 +1,8 @@
 package com.example.commitwhisper.service;
 
-import com.example.commitwhisper.dto.CreateUserReq;
-import com.example.commitwhisper.dto.LoginUserReq;
-import com.example.commitwhisper.dto.LoginUserRes;
+import com.example.commitwhisper.dto.user.CreateUserReq;
+import com.example.commitwhisper.dto.user.LoginUserReq;
+import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.entity.User;
 import com.example.commitwhisper.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

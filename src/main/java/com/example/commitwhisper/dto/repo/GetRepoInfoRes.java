@@ -1,4 +1,4 @@
-package com.example.commitwhisper.dto;
+package com.example.commitwhisper.dto.repo;
 
 import java.time.LocalDateTime;
 

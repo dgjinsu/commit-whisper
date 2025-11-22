@@ -1,7 +1,7 @@
 package com.example.commitwhisper.client;
 
-import com.example.commitwhisper.dto.GitHubCommitDetailRes;
-import com.example.commitwhisper.dto.GitHubCommitRes;
+import com.example.commitwhisper.dto.github.GitHubCommitDetailRes;
+import com.example.commitwhisper.dto.github.GitHubCommitRes;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

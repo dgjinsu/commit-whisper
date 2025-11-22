@@ -1,7 +1,7 @@
 package com.example.commitwhisper.service;
 
-import com.example.commitwhisper.dto.CreateRepoInfoReq;
-import com.example.commitwhisper.dto.GetRepoInfoRes;
+import com.example.commitwhisper.dto.repo.CreateRepoInfoReq;
+import com.example.commitwhisper.dto.repo.GetRepoInfoRes;
 import com.example.commitwhisper.entity.RepoInfo;
 import com.example.commitwhisper.entity.User;
 import com.example.commitwhisper.repository.RepoInfoRepository;

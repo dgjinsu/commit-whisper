@@ -1,6 +1,6 @@
 package com.example.commitwhisper.service;
 
-import com.example.commitwhisper.dto.GitHubCommitDetailRes;
+import com.example.commitwhisper.dto.github.GitHubCommitDetailRes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

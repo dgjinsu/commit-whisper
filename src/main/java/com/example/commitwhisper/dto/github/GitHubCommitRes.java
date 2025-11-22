@@ -1,4 +1,4 @@
-package com.example.commitwhisper.dto;
+package com.example.commitwhisper.dto.github;
 
 public record GitHubCommitRes(
         String sha,

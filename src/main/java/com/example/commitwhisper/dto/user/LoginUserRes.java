@@ -1,4 +1,4 @@
-package com.example.commitwhisper.dto;
+package com.example.commitwhisper.dto.user;
 
 public record LoginUserRes(
         boolean success,

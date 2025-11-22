@@ -1,6 +1,6 @@
 package com.example.commitwhisper.service;
 
-import com.example.commitwhisper.dto.GetCommitSummaryHistoryRes;
+import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
 import com.example.commitwhisper.entity.CommitSummaryHistory;
 import com.example.commitwhisper.repository.CommitSummaryHistoryRepository;
 import lombok.RequiredArgsConstructor;
