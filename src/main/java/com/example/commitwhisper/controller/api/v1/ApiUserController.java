@@ -34,7 +34,8 @@ public class ApiUserController {
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LoginUserRes.UserInfo> getCurrentUser(
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         LoginUserRes.UserInfo userInfo = new LoginUserRes.UserInfo(
             userPrincipal.getId(),
             userPrincipal.getLoginId(),
@@ -47,7 +48,8 @@ public class ApiUserController {
     @GetMapping("/settings")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GetUserSettingsRes> getSettings(
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         GetUserSettingsRes settings = userService.getSettings(userPrincipal.getId());
         return ResponseEntity.ok(settings);
     }
@@ -56,7 +58,8 @@ public class ApiUserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> updateSlackWebhook(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @RequestBody UpdateSlackWebhookReq req) {
+        @RequestBody UpdateSlackWebhookReq req
+    ) {
         userService.updateSlackWebhookUrl(userPrincipal.getId(), req);
         return ResponseEntity.ok().build();
     }

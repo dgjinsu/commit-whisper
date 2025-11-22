@@ -50,7 +50,8 @@ public class ApiRepoInfoController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GetRepoInfoRes> createRepo(
         @RequestBody CreateRepoInfoReq createReq,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
             userPrincipal.getId(),
             createReq.owner(),
@@ -67,7 +68,8 @@ public class ApiRepoInfoController {
     public ResponseEntity<GetRepoInfoRes> updateRepo(
         @PathVariable("repoId") Long repoId,
         @RequestBody UpdateRepoInfoReq updateReq,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         GetRepoInfoRes updated = repoInfoService.update(repoId, userPrincipal.getId(), updateReq);
         return ResponseEntity.ok(updated);
     }
@@ -76,7 +78,8 @@ public class ApiRepoInfoController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteRepo(
         @PathVariable("repoId") Long repoId,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         repoInfoService.delete(repoId, userPrincipal.getId());
         return ResponseEntity.noContent().build();
     }

@@ -30,57 +30,51 @@ public class ApiCommitSummaryHistoryController {
     public ResponseEntity<PageResponse<GetCommitSummaryHistoryRes>> getHistories(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        PageResponse<GetCommitSummaryHistoryRes> pageRes = historyService.findByUserIdWithPaging(userPrincipal.getId(),
-            page, size);
-        return ResponseEntity.ok(pageRes);
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        return ResponseEntity.ok(historyService.findByUserIdWithPaging(userPrincipal.getId(), page, size));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GetHistoryDetailRes> getHistoryDetail(
         @PathVariable Long id,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        try {
-            GetCommitSummaryHistoryRes history = historyService.findById(id);
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        GetCommitSummaryHistoryRes history = historyService.findById(id);
 
-            // 본인의 히스토리만 조회 가능하도록 검증
-            if (!history.userId().equals(userPrincipal.getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            GetHistoryDetailRes response = new GetHistoryDetailRes(
-                history.id(),
-                history.repoOwner(),
-                history.repoName(),
-                history.commitSha(),
-                history.summary(),
-                history.htmlSummary(),
-                history.commitDate(),
-                history.createdAt()
-            );
-
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // 본인의 히스토리만 조회 가능하도록 검증
+        if (!history.userId().equals(userPrincipal.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+        return ResponseEntity.ok(new GetHistoryDetailRes(
+            history.id(),
+            history.repoOwner(),
+            history.repoName(),
+            history.commitSha(),
+            history.summary(),
+            history.htmlSummary(),
+            history.commitDate(),
+            history.createdAt()
+        ));
     }
 
     @GetMapping("/recent")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<GetCommitSummaryHistoryRes>> getRecentHistories(
         @RequestParam(defaultValue = "5") int limit,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<GetCommitSummaryHistoryRes> histories = historyService.findRecentByUserId(userPrincipal.getId(), limit);
-        return ResponseEntity.ok(histories);
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        return ResponseEntity.ok(historyService.findRecentByUserId(userPrincipal.getId(), limit));
     }
 
     @GetMapping("/daily-usage")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<GetDailyUsageRes>> getDailyUsage(
         @RequestParam(defaultValue = "7") int days,
-        @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<GetDailyUsageRes> dailyUsage = historyService.findDailyUsageByUserId(userPrincipal.getId(), days);
-        return ResponseEntity.ok(dailyUsage);
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        return ResponseEntity.ok(historyService.findDailyUsageByUserId(userPrincipal.getId(), days));
     }
 }
