@@ -23,9 +23,9 @@ public class CommitScheduler {
     @Scheduled(fixedRate = 600000) // 10분마다 실행
     public void checkCommits() {
         log.info("스케줄러 실행: 커밋 체크 시작");
-        
+
         List<RepoInfo> repos = commitCheckService.getAllRepos();
-        
+
         for (RepoInfo repo : repos) {
             processRepo(repo);
         }
@@ -34,31 +34,31 @@ public class CommitScheduler {
     private void processRepo(RepoInfo repo) {
         // 1. Whisper 커밋 찾기
         commitCheckService.findWhisperCommit(repo)
-                .ifPresent(whisperCommit -> {
-                    // 2. 커밋 시간 파싱
-                    String commitDateStr = whisperCommit.commit().author().date();
-                    LocalDateTime commitTime = commitCheckService.parseCommitTime(commitDateStr);
-                    
-                    log.info("Whisper 커밋 처리 시작 - SHA: {}, 저장소: {}/{}, 커밋 시간: {}", 
-                            whisperCommit.sha(), repo.getOwner(), repo.getRepo(), commitTime);
+            .ifPresent(whisperCommit -> {
+                // 2. 커밋 시간 파싱
+                String commitDateStr = whisperCommit.commit().author().date();
+                LocalDateTime commitTime = commitCheckService.parseCommitTime(commitDateStr);
 
-                    // 3. 커밋 상세 정보 조회
-                    var commitDetail = commitCheckService.getCommitDetail(repo, whisperCommit.sha());
-                    
-                    // 4. LLM 요약 생성
-                    String summary = openAiService.summarizeCommit(commitDetail);
-                    
-                    // 5. 히스토리 저장
-                    commitSummaryHistoryService.saveCommitHistory(
-                            repo, 
-                            whisperCommit.sha(), 
-                            summary, 
-                            commitTime
-                    );
-                    
-                    // 6. lastWhisperCommitTime 업데이트
-                    commitCheckService.updateLastWhisperCommitTime(repo, commitTime);
-                });
+                log.info("Whisper 커밋 처리 시작 - SHA: {}, 저장소: {}/{}, 커밋 시간: {}",
+                    whisperCommit.sha(), repo.getOwner(), repo.getRepo(), commitTime);
+
+                // 3. 커밋 상세 정보 조회
+                var commitDetail = commitCheckService.getCommitDetail(repo, whisperCommit.sha());
+
+                // 4. LLM 요약 생성
+                String summary = openAiService.summarizeCommit(commitDetail);
+
+                // 5. 히스토리 저장
+                commitSummaryHistoryService.saveCommitHistory(
+                    repo,
+                    whisperCommit.sha(),
+                    summary,
+                    commitTime
+                );
+
+                // 6. lastWhisperCommitTime 업데이트
+                commitCheckService.updateLastWhisperCommitTime(repo, commitTime);
+            });
     }
 }
 

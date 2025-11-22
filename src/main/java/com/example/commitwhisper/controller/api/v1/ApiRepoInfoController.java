@@ -48,30 +48,30 @@ public class ApiRepoInfoController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createRepo(
-            @RequestBody CreateRepoInfoReq createReq,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @RequestBody CreateRepoInfoReq createReq,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
-                    userPrincipal.getId(),
-                    createReq.owner(),
-                    createReq.repo(),
-                    createReq.triggerBranch(),
-                    createReq.description()
+                userPrincipal.getId(),
+                createReq.owner(),
+                createReq.repo(),
+                createReq.triggerBranch(),
+                createReq.description()
             );
             GetRepoInfoRes created = repoInfoService.create(reqWithUserId);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+                .body(e.getMessage());
         }
     }
 
     @PutMapping("/{repoId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> updateRepo(
-            @PathVariable("repoId") Long repoId,
-            @RequestBody UpdateRepoInfoReq updateReq,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @PathVariable("repoId") Long repoId,
+        @RequestBody UpdateRepoInfoReq updateReq,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             GetRepoInfoRes updated = repoInfoService.update(repoId, userPrincipal.getId(), updateReq);
             return ResponseEntity.ok(updated);
@@ -86,8 +86,8 @@ public class ApiRepoInfoController {
     @DeleteMapping("/{repoId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteRepo(
-            @PathVariable("repoId") Long repoId,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @PathVariable("repoId") Long repoId,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             repoInfoService.delete(repoId, userPrincipal.getId());
             return ResponseEntity.noContent().build();

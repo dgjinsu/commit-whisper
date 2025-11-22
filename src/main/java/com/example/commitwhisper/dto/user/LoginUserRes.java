@@ -1,15 +1,17 @@
 package com.example.commitwhisper.dto.user;
 
 public record LoginUserRes(
-        boolean success,
-        String message,
-        UserInfo user
+    boolean success,
+    String message,
+    UserInfo user
 ) {
+
     public record UserInfo(
-            Long id,
-            String loginId,
-            String name
+        Long id,
+        String loginId,
+        String name
     ) {
+
     }
 }
 

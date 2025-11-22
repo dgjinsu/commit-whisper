@@ -45,7 +45,8 @@ public class CommitSummaryHistory {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public CommitSummaryHistory(User user, RepoInfo repoInfo, String commitSha, String summary, LocalDateTime commitDate) {
+    public CommitSummaryHistory(User user, RepoInfo repoInfo, String commitSha, String summary,
+        LocalDateTime commitDate) {
         this.user = user;
         this.repoInfo = repoInfo;
         this.commitSha = commitSha;

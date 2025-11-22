@@ -28,18 +28,19 @@ public class ApiCommitSummaryHistoryController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PageResponse<GetCommitSummaryHistoryRes>> getHistories(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        PageResponse<GetCommitSummaryHistoryRes> pageRes = historyService.findByUserIdWithPaging(userPrincipal.getId(), page, size);
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        PageResponse<GetCommitSummaryHistoryRes> pageRes = historyService.findByUserIdWithPaging(userPrincipal.getId(),
+            page, size);
         return ResponseEntity.ok(pageRes);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GetHistoryDetailRes> getHistoryDetail(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             GetCommitSummaryHistoryRes history = historyService.findById(id);
 
@@ -49,14 +50,14 @@ public class ApiCommitSummaryHistoryController {
             }
 
             GetHistoryDetailRes response = new GetHistoryDetailRes(
-                    history.id(),
-                    history.repoOwner(),
-                    history.repoName(),
-                    history.commitSha(),
-                    history.summary(),
-                    history.htmlSummary(),
-                    history.commitDate(),
-                    history.createdAt()
+                history.id(),
+                history.repoOwner(),
+                history.repoName(),
+                history.commitSha(),
+                history.summary(),
+                history.htmlSummary(),
+                history.commitDate(),
+                history.createdAt()
             );
 
             return ResponseEntity.ok(response);
@@ -68,8 +69,8 @@ public class ApiCommitSummaryHistoryController {
     @GetMapping("/recent")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<GetCommitSummaryHistoryRes>> getRecentHistories(
-            @RequestParam(defaultValue = "5") int limit,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @RequestParam(defaultValue = "5") int limit,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<GetCommitSummaryHistoryRes> histories = historyService.findRecentByUserId(userPrincipal.getId(), limit);
         return ResponseEntity.ok(histories);
     }
@@ -77,8 +78,8 @@ public class ApiCommitSummaryHistoryController {
     @GetMapping("/daily-usage")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<GetDailyUsageRes>> getDailyUsage(
-            @RequestParam(defaultValue = "7") int days,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @RequestParam(defaultValue = "7") int days,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<GetDailyUsageRes> dailyUsage = historyService.findDailyUsageByUserId(userPrincipal.getId(), days);
         return ResponseEntity.ok(dailyUsage);
     }

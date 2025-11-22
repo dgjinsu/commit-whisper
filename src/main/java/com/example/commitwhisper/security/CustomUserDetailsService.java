@@ -19,13 +19,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId));
+            .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId));
 
         UserPrincipalDto userDto = new UserPrincipalDto(
-                user.getId(),
-                user.getLoginId(),
-                user.getPassword(),
-                user.getName()
+            user.getId(),
+            user.getLoginId(),
+            user.getPassword(),
+            user.getName()
         );
 
         return new UserPrincipal(userDto);

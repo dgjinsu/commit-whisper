@@ -23,18 +23,18 @@ public class CommitSummaryHistoryController {
     @GetMapping("/history")
     @PreAuthorize("isAuthenticated()")
     public String historyPage(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Model model,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        Model model,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
-                userPrincipal.getId(),
-                userPrincipal.getLoginId(),
-                userPrincipal.getName()
+            userPrincipal.getId(),
+            userPrincipal.getLoginId(),
+            userPrincipal.getName()
         );
 
         PageResponse<GetCommitSummaryHistoryRes> pageRes = historyService.findByUserIdWithPaging(user.id(), page, size);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("histories", pageRes.content());
         model.addAttribute("historyCount", pageRes.totalElements());
@@ -51,17 +51,17 @@ public class CommitSummaryHistoryController {
     @GetMapping("/history/{id}")
     @PreAuthorize("isAuthenticated()")
     public String historyDetailPage(
-            @PathVariable Long id,
-            Model model,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        @PathVariable Long id,
+        Model model,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
-                userPrincipal.getId(),
-                userPrincipal.getLoginId(),
-                userPrincipal.getName()
+            userPrincipal.getId(),
+            userPrincipal.getLoginId(),
+            userPrincipal.getName()
         );
 
         GetCommitSummaryHistoryRes history = historyService.findById(id);
-        
+
         // 본인의 히스토리만 조회 가능하도록 검증
         if (!history.userId().equals(user.id())) {
             return "redirect:/history";

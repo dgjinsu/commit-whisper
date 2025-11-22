@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
+
     private final RepoInfoService repoInfoService;
     private final CommitSummaryHistoryService historyService;
 
@@ -35,12 +36,12 @@ public class UserController {
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
     public String home(
-            Model model,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Model model,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
-                userPrincipal.getId(),
-                userPrincipal.getLoginId(),
-                userPrincipal.getName()
+            userPrincipal.getId(),
+            userPrincipal.getLoginId(),
+            userPrincipal.getName()
         );
 
         List<GetRepoInfoRes> repos = repoInfoService.findAll();

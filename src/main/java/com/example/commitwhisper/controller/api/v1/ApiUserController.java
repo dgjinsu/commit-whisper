@@ -29,7 +29,7 @@ public class ApiUserController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+                .body(e.getMessage());
         }
     }
 
@@ -37,9 +37,9 @@ public class ApiUserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LoginUserRes.UserInfo> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo userInfo = new LoginUserRes.UserInfo(
-                userPrincipal.getId(),
-                userPrincipal.getLoginId(),
-                userPrincipal.getName()
+            userPrincipal.getId(),
+            userPrincipal.getLoginId(),
+            userPrincipal.getName()
         );
 
         return ResponseEntity.ok(userInfo);

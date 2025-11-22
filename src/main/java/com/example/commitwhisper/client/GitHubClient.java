@@ -13,16 +13,16 @@ public interface GitHubClient {
 
     @GetMapping("/repos/{owner}/{repo}/commits")
     List<GitHubCommitRes> getCommits(
-            @PathVariable("owner") String owner,
-            @PathVariable("repo") String repo,
-            @RequestParam("sha") String branch
+        @PathVariable("owner") String owner,
+        @PathVariable("repo") String repo,
+        @RequestParam("sha") String branch
     );
 
     @GetMapping("/repos/{owner}/{repo}/commits/{sha}")
     GitHubCommitDetailRes getCommitDetail(
-            @PathVariable("owner") String owner,
-            @PathVariable("repo") String repo,
-            @PathVariable("sha") String sha
+        @PathVariable("owner") String owner,
+        @PathVariable("repo") String repo,
+        @PathVariable("sha") String sha
     );
 }
 

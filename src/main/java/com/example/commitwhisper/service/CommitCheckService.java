@@ -29,18 +29,18 @@ public class CommitCheckService {
 
     public Optional<GitHubCommitRes> findWhisperCommit(RepoInfo repo) {
         List<GitHubCommitRes> commits = githubClient.getCommits(
-                repo.getOwner(),
-                repo.getRepo(),
-                repo.getTriggerBranch()
+            repo.getOwner(),
+            repo.getRepo(),
+            repo.getTriggerBranch()
         );
 
         // 가장 먼저 발견한 whisper 커밋 찾기
         for (GitHubCommitRes commit : commits) {
             String message = commit.commit().message();
-            
+
             if (message != null && message.trim().toLowerCase().startsWith("whisper:")) {
-                log.info("Whisper 커밋 감지 - SHA: {}, 저장소: {}/{}", 
-                        commit.sha(), repo.getOwner(), repo.getRepo());
+                log.info("Whisper 커밋 감지 - SHA: {}, 저장소: {}/{}",
+                    commit.sha(), repo.getOwner(), repo.getRepo());
                 return Optional.of(commit);
             }
         }
@@ -51,13 +51,13 @@ public class CommitCheckService {
 
     public GitHubCommitDetailRes getCommitDetail(RepoInfo repo, String sha) {
         GitHubCommitDetailRes commitDetail = githubClient.getCommitDetail(
-                repo.getOwner(),
-                repo.getRepo(),
-                sha
+            repo.getOwner(),
+            repo.getRepo(),
+            sha
         );
 
-        log.info("커밋 상세 정보 조회 완료 - 저장소: {}/{}, SHA: {}", 
-                repo.getOwner(), repo.getRepo(), sha);
+        log.info("커밋 상세 정보 조회 완료 - 저장소: {}/{}, SHA: {}",
+            repo.getOwner(), repo.getRepo(), sha);
         return commitDetail;
     }
 
@@ -66,8 +66,8 @@ public class CommitCheckService {
     public void updateLastWhisperCommitTime(RepoInfo repo, LocalDateTime commitTime) {
         repo.updateLastWhisperCommitTime(commitTime);
         repoInfoRepository.save(repo);
-        log.info("저장소 {}/{}의 lastWhisperCommitTime이 업데이트되었습니다: {}", 
-                repo.getOwner(), repo.getRepo(), commitTime);
+        log.info("저장소 {}/{}의 lastWhisperCommitTime이 업데이트되었습니다: {}",
+            repo.getOwner(), repo.getRepo(), commitTime);
     }
 
     public LocalDateTime parseCommitTime(String dateStr) {

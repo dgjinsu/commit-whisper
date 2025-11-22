@@ -3,23 +3,27 @@ package com.example.commitwhisper.dto.github;
 import java.util.List;
 
 public record GitHubCommitDetailRes(
-        Commit commit,
-        List<File> files
+    Commit commit,
+    List<File> files
 ) {
+
     public record Commit(
-            String message,
-            Author author
+        String message,
+        Author author
     ) {
+
         public record Author(
-                String date
+            String date
         ) {
+
         }
     }
 
     public record File(
-            String filename,
-            String patch
+        String filename,
+        String patch
     ) {
+
     }
 }
 
