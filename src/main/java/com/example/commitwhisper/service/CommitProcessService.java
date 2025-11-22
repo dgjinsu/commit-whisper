@@ -57,6 +57,7 @@ public class CommitProcessService {
     /**
      * 단일 레포지토리 처리 로직
      */
+    @Transactional
     public void processRepo(RepoInfo repo) {
         try {
             String repoInfo = String.format("%s/%s", repo.getOwner(), repo.getRepo());

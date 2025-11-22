@@ -17,27 +17,51 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
+    /**
+     * 사용자 고유 ID
+     */
     @Id
     @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 
+    /**
+     * 로그인 ID (고유값, 로컬/소셜 로그인 공통 사용)
+     */
     @Column(nullable = false, unique = true)
     private String loginId;
 
+    /**
+     * 비밀번호 (로컬 로그인 사용자만 사용, OAuth2 사용자는 null)
+     */
     private String password;
 
+    /**
+     * 사용자 이름
+     */
     private String name;
 
+    /**
+     * Slack 웹훅 URL (선택사항, 알림 발송용)
+     */
     @Column(name = "slack_webhook_url", columnDefinition = "TEXT")
     private String slackWebhookUrl;
 
+    /**
+     * 인증 제공자 (local, google, github, kakao 등)
+     */
     @Column(name = "provider")
     private String provider;
 
+    /**
+     * 인증 제공자에서 발급한 사용자 ID
+     */
     @Column(name = "provider_id")
     private String providerId;
 
+    /**
+     * 이메일 주소 (OAuth2 사용자의 경우 제공자에서 받은 이메일)
+     */
     @Column(name = "email")
     private String email;
 
