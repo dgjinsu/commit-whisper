@@ -1,21 +1,21 @@
 package com.example.commitwhisper.service;
 
+import com.example.commitwhisper.dto.common.PageResponse;
 import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
 import com.example.commitwhisper.dto.history.GetDailyUsageRes;
 import com.example.commitwhisper.entity.CommitSummaryHistory;
 import com.example.commitwhisper.entity.RepoInfo;
 import com.example.commitwhisper.repository.CommitSummaryHistoryRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,11 @@ public class CommitSummaryHistoryService {
         return historyRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<GetCommitSummaryHistoryRes> findByUserIdWithPaging(Long userId, int page, int size) {
+        return historyRepository.findByUserIdWithPaging(userId, page, size);
     }
 
     @Transactional(readOnly = true)

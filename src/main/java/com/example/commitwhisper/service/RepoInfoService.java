@@ -7,12 +7,11 @@ import com.example.commitwhisper.entity.RepoInfo;
 import com.example.commitwhisper.entity.User;
 import com.example.commitwhisper.repository.RepoInfoRepository;
 import com.example.commitwhisper.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

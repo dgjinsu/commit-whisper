@@ -63,6 +63,42 @@
                 <p class="empty-hint">whisper 커밋이 감지되면 자동으로 요약이 생성됩니다.</p>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <div th:if="${histories != null && !histories.isEmpty() && totalPages > 1}" class="pagination-container">
+            <div class="pagination-info">
+                <span>총 <strong th:text="${totalElements}">0</strong>개 중 
+                    <strong th:text="${currentPage * pageSize + 1}">1</strong> - 
+                    <strong th:text="${currentPage * pageSize + histories.size()}">10</strong>개 표시</span>
+            </div>
+            <div class="pagination">
+                <a th:href="@{/history(page=${currentPage - 1}, size=${pageSize})}" 
+                   th:if="${hasPrevious}" 
+                   class="pagination-btn" 
+                   title="이전 페이지">‹</a>
+                <span th:if="${!hasPrevious}" class="pagination-btn disabled" title="이전 페이지">‹</span>
+                
+                <th:block th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                    <th:block th:if="${pageNum == 0 || pageNum == totalPages - 1 || (pageNum >= currentPage - 2 && pageNum <= currentPage + 2)}">
+                        <a th:href="@{/history(page=${pageNum}, size=${pageSize})}" 
+                           th:text="${pageNum + 1}"
+                           th:class="${pageNum == currentPage} ? 'pagination-btn active' : 'pagination-btn'"></a>
+                    </th:block>
+                    <th:block th:if="${pageNum > 0 && pageNum < totalPages - 1 && pageNum == currentPage - 3 && currentPage > 3}">
+                        <span class="pagination-ellipsis">...</span>
+                    </th:block>
+                    <th:block th:if="${pageNum > 0 && pageNum < totalPages - 1 && pageNum == currentPage + 3 && currentPage < totalPages - 4}">
+                        <span class="pagination-ellipsis">...</span>
+                    </th:block>
+                </th:block>
+                
+                <a th:href="@{/history(page=${currentPage + 1}, size=${pageSize})}" 
+                   th:if="${hasNext}" 
+                   class="pagination-btn" 
+                   title="다음 페이지">›</a>
+                <span th:if="${!hasNext}" class="pagination-btn disabled" title="다음 페이지">›</span>
+            </div>
+        </div>
     </div>
 
     <!-- Header Script -->

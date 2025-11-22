@@ -1,5 +1,6 @@
 package com.example.commitwhisper.controller;
 
+import com.example.commitwhisper.dto.common.PageResponse;
 import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
 import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.security.UserPrincipal;
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +23,8 @@ public class CommitSummaryHistoryController {
     @GetMapping("/history")
     @PreAuthorize("isAuthenticated()")
     public String historyPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             Model model,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
@@ -31,10 +33,17 @@ public class CommitSummaryHistoryController {
                 userPrincipal.getName()
         );
 
-        List<GetCommitSummaryHistoryRes> histories = historyService.findByUserId(user.id());
+        PageResponse<GetCommitSummaryHistoryRes> pageRes = historyService.findByUserIdWithPaging(user.id(), page, size);
+        
         model.addAttribute("user", user);
-        model.addAttribute("histories", histories);
-        model.addAttribute("historyCount", histories.size());
+        model.addAttribute("histories", pageRes.content());
+        model.addAttribute("historyCount", pageRes.totalElements());
+        model.addAttribute("currentPage", pageRes.page());
+        model.addAttribute("pageSize", pageRes.size());
+        model.addAttribute("totalPages", pageRes.totalPages());
+        model.addAttribute("totalElements", pageRes.totalElements());
+        model.addAttribute("hasNext", pageRes.hasNext());
+        model.addAttribute("hasPrevious", pageRes.hasPrevious());
 
         return "history";
     }

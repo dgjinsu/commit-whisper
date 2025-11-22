@@ -1,15 +1,14 @@
 package com.example.commitwhisper.repository;
 
 import com.example.commitwhisper.entity.CommitSummaryHistory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-public interface CommitSummaryHistoryRepository extends JpaRepository<CommitSummaryHistory, Long> {
+public interface CommitSummaryHistoryRepository extends JpaRepository<CommitSummaryHistory, Long>, CommitSummaryHistoryRepositoryCustom {
     
     List<CommitSummaryHistory> findByUserIdOrderByCreatedAtDesc(Long userId);
     

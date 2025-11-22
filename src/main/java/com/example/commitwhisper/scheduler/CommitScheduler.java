@@ -4,13 +4,12 @@ import com.example.commitwhisper.entity.RepoInfo;
 import com.example.commitwhisper.service.CommitCheckService;
 import com.example.commitwhisper.service.CommitSummaryHistoryService;
 import com.example.commitwhisper.service.OpenAiService;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

@@ -4,14 +4,14 @@ import com.example.commitwhisper.dto.repo.GetRepoInfoRes;
 import com.example.commitwhisper.dto.user.LoginUserRes;
 import com.example.commitwhisper.security.UserPrincipal;
 import com.example.commitwhisper.service.RepoInfoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @RequiredArgsConstructor
