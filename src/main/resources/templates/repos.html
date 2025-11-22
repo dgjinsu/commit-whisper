@@ -25,29 +25,29 @@
         <!-- Add Repository Form -->
         <div class="form-card">
             <h2 class="form-title">새 저장소 등록</h2>
-            <form th:action="@{/repos}" th:object="${createReq}" method="post" class="repo-form">
+            <form id="createRepoForm" class="repo-form">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="owner">Owner</label>
-                        <input type="text" id="owner" th:field="*{owner}" placeholder="예: octocat" required>
+                        <input type="text" id="owner" placeholder="예: octocat" required>
                         <small class="form-hint">GitHub 사용자명 또는 조직명</small>
                     </div>
                     
                     <div class="form-group">
                         <label for="repo">Repository</label>
-                        <input type="text" id="repo" th:field="*{repo}" placeholder="예: Hello-World" required>
+                        <input type="text" id="repo" placeholder="예: Hello-World" required>
                         <small class="form-hint">저장소 이름</small>
                     </div>
                     
                     <div class="form-group">
                         <label for="triggerBranch">Trigger Branch</label>
-                        <input type="text" id="triggerBranch" th:field="*{triggerBranch}" placeholder="예: main" required>
+                        <input type="text" id="triggerBranch" placeholder="예: main" required>
                         <small class="form-hint">커밋 알림을 받을 브랜치</small>
                     </div>
                     
                     <div class="form-group full-width">
                         <label for="description">Description</label>
-                        <textarea id="description" th:field="*{description}" placeholder="저장소에 대한 설명을 입력하세요" rows="3"></textarea>
+                        <textarea id="description" placeholder="저장소에 대한 설명을 입력하세요" rows="3"></textarea>
                     </div>
                 </div>
                 
@@ -75,6 +75,10 @@
                                 <span th:text="${repo.triggerBranch}"></span>
                             </div>
                         </div>
+                        <div class="repo-card-actions">
+                            <a th:href="@{/repos/{repoId}/edit(repoId=${repo.id()})}" class="btn-edit">수정</a>
+                            <button type="button" class="btn-delete" th:onclick="'deleteRepo(' + ${repo.id()} + ')'">삭제</button>
+                        </div>
                     </div>
                     <div th:if="${repo.description != null && !repo.description.isEmpty()}" class="repo-card-description" th:text="${repo.description}"></div>
                 </div>
@@ -89,6 +93,73 @@
 
     <!-- Header Script -->
     <div th:replace="~{fragments/header :: headerScript}"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const csrfToken = /*[[${_csrf.token}]]*/ '';
+        const csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+
+        document.getElementById('createRepoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const createData = {
+                owner: document.getElementById('owner').value,
+                repo: document.getElementById('repo').value,
+                triggerBranch: document.getElementById('triggerBranch').value,
+                description: document.getElementById('description').value
+            };
+
+            fetch('/api/v1/repos', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(createData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/repos?message=저장소가 등록되었습니다.';
+                } else {
+                    response.text().then(text => {
+                        alert('등록 실패: ' + (text || '알 수 없는 오류가 발생했습니다.'));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('등록 중 오류가 발생했습니다.');
+            });
+        });
+
+        function deleteRepo(repoId) {
+            if (!confirm('정말 삭제하시겠습니까?')) {
+                return;
+            }
+
+            fetch('/api/v1/repos/' + repoId, {
+                method: 'DELETE',
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/repos?message=저장소가 삭제되었습니다.';
+                } else {
+                    response.text().then(text => {
+                        alert('삭제 실패: ' + (text || '알 수 없는 오류가 발생했습니다.'));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            });
+        }
+        /*]]>*/
+    </script>
 </body>
 </html>
 

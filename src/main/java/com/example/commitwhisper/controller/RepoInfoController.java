@@ -1,17 +1,15 @@
 package com.example.commitwhisper.controller;
 
-import com.example.commitwhisper.dto.repo.CreateRepoInfoReq;
 import com.example.commitwhisper.dto.repo.GetRepoInfoRes;
 import com.example.commitwhisper.dto.user.LoginUserRes;
+import com.example.commitwhisper.security.UserPrincipal;
 import com.example.commitwhisper.service.RepoInfoService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,43 +20,49 @@ public class RepoInfoController {
     private final RepoInfoService repoInfoService;
 
     @GetMapping("/repos")
-    public String repoListPage(HttpSession session, Model model) {
-        LoginUserRes.UserInfo user = (LoginUserRes.UserInfo) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
+    @PreAuthorize("isAuthenticated()")
+    public String repoListPage(
+            Model model,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
+                userPrincipal.getId(),
+                userPrincipal.getLoginId(),
+                userPrincipal.getName()
+        );
 
         List<GetRepoInfoRes> repos = repoInfoService.findAll();
         model.addAttribute("user", user);
         model.addAttribute("repos", repos);
-        model.addAttribute("createReq", new CreateRepoInfoReq(user.id(), "", "", "", ""));
         return "repos";
     }
 
-    @PostMapping("/repos")
-    public String createRepo(@ModelAttribute CreateRepoInfoReq createReq, HttpSession session, RedirectAttributes redirectAttributes) {
-        LoginUserRes.UserInfo user = (LoginUserRes.UserInfo) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
 
+    @GetMapping("/repos/{repoId}/edit")
+    @PreAuthorize("isAuthenticated()")
+    public String editRepoPage(
+            @PathVariable("repoId") Long repoId,
+            Model model,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
-            // 현재 로그인한 유저의 ID로 저장소 생성
-            CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
-                    user.id(),
-                    createReq.owner(),
-                    createReq.repo(),
-                    createReq.triggerBranch(),
-                    createReq.description()
+            GetRepoInfoRes repo = repoInfoService.findById(repoId);
+            
+            // 본인 소유 확인
+            // Note: GetRepoInfoRes에 userId가 없으므로, 서비스에서 확인하거나 별도로 확인 필요
+            // 일단 서비스에서 권한 확인하도록 하고, 여기서는 에러 처리만
+            
+            LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
+                    userPrincipal.getId(),
+                    userPrincipal.getLoginId(),
+                    userPrincipal.getName()
             );
-            repoInfoService.create(reqWithUserId);
-            redirectAttributes.addFlashAttribute("message", "저장소가 등록되었습니다.");
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
 
-        redirectAttributes.addFlashAttribute("user", user);
-        return "redirect:/repos";
+            model.addAttribute("user", user);
+            model.addAttribute("repo", repo);
+            return "repo-edit";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/repos";
+        }
     }
+
 }
 

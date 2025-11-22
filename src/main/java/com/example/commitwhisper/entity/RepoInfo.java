@@ -49,5 +49,12 @@ public class RepoInfo {
     public void updateLastWhisperCommitTime(LocalDateTime commitTime) {
         this.lastWhisperCommitTime = commitTime;
     }
+
+    public void update(String owner, String repo, String triggerBranch, String description) {
+        this.owner = owner;
+        this.repo = repo;
+        this.triggerBranch = triggerBranch;
+        this.description = description;
+    }
 }
 
