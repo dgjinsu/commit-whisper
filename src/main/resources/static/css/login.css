@@ -1,0 +1,338 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0ff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.login-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 왼쪽: 서비스 소개 섹션 */
+.intro-section {
+    flex: 1;
+    background: linear-gradient(135deg, #b8a9e8 0%, #d4c5f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+        transform: translate(-30px, -30px) rotate(180deg);
+    }
+}
+
+.intro-content {
+    max-width: 500px;
+    z-index: 1;
+    position: relative;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.logo-text {
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.intro-text h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.description {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.8;
+    margin-bottom: 40px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: white;
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+/* 오른쪽: 로그인 폼 섹션 */
+.login-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    background: #f5f0ff;
+}
+
+.login-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 48px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.login-form {
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border-left: 4px solid #dc2626;
+    font-size: 14px;
+}
+
+.message {
+    background: #f0fdf4;
+    color: #16a34a;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border-left: 4px solid #16a34a;
+    font-size: 14px;
+}
+
+.signup-link {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.signup-link .link {
+    color: #8b5cf6;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 8px;
+    transition: color 0.2s;
+}
+
+.signup-link .link:hover {
+    color: #7c3aed;
+    text-decoration: underline;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 968px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .intro-section {
+        padding: 40px 30px;
+        min-height: 40vh;
+    }
+
+    .intro-text h2 {
+        font-size: 32px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+
+    .login-section {
+        padding: 40px 30px;
+    }
+
+    .login-card {
+        padding: 36px;
+    }
+}
+
+@media (max-width: 640px) {
+    .intro-section {
+        padding: 30px 20px;
+    }
+
+    .logo-section {
+        margin-bottom: 30px;
+    }
+
+    .logo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+    }
+
+    .logo-text {
+        font-size: 28px;
+    }
+
+    .intro-text h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .description {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+
+    .features {
+        gap: 12px;
+    }
+
+    .feature-item {
+        font-size: 14px;
+    }
+
+    .feature-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+
+    .login-section {
+        padding: 30px 20px;
+    }
+
+    .login-card {
+        padding: 32px 24px;
+    }
+
+    .login-title {
+        font-size: 28px;
+        margin-bottom: 28px;
+    }
+}
+

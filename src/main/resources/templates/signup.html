@@ -105,22 +105,22 @@
     <div class="container">
         <h1>회원가입</h1>
         
-        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
         
-        <form th:action="@{/signup}" th:object="${signupReq}" method="post">
+        <form id="signupForm">
             <div class="form-group">
                 <label for="loginId">아이디</label>
-                <input type="text" id="loginId" th:field="*{loginId}" required>
+                <input type="text" id="loginId" required>
             </div>
             
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" id="password" th:field="*{password}" required>
+                <input type="password" id="password" required>
             </div>
             
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" th:field="*{name}" required>
+                <input type="text" id="name" required>
             </div>
             
             <button type="submit" class="btn">회원가입</button>
@@ -130,6 +130,50 @@
             <button type="button" class="btn btn-secondary">로그인으로 돌아가기</button>
         </a>
     </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const csrfToken = /*[[${_csrf.token}]]*/ '';
+        const csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const signupData = {
+                loginId: document.getElementById('loginId').value,
+                password: document.getElementById('password').value,
+                name: document.getElementById('name').value
+            };
+
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'none';
+
+            fetch('/api/v1/users/signup', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signupData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/login?message=회원가입이 완료되었습니다. 로그인해주세요.';
+                } else {
+                    response.text().then(text => {
+                        errorDiv.textContent = text || '회원가입 중 오류가 발생했습니다.';
+                        errorDiv.style.display = 'block';
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorDiv.textContent = '회원가입 중 오류가 발생했습니다.';
+                errorDiv.style.display = 'block';
+            });
+        });
+        /*]]>*/
+    </script>
 </body>
 </html>
 
