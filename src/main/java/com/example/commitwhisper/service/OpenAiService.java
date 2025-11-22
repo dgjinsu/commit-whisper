@@ -119,65 +119,46 @@ public class OpenAiService {
     private String getMockedSummary() {
         return """
             ## 날짜
-                            
-            2025-11-22 04:51:35
-                            
-                            
+            2025-11-22 16:45:25
+
             ## 변경된 파일 목록
-                            
-            - [수정] src/main/java/com/example/commitwhisper/client/GitHubClient.java
-                            
-            - [수정] src/main/java/com/example/commitwhisper/dto/GetRepoInfoRes.java
-                            
-            - [생성] src/main/java/com/example/commitwhisper/dto/GitHubCommitDetailRes.java
-                            
-            - [수정] src/main/java/com/example/commitwhisper/dto/GitHubCommitRes.java
-                            
-            - [수정] src/main/java/com/example/commitwhisper/entity/RepoInfo.java
-                            
-            - [수정] src/main/java/com/example/commitwhisper/service/CommitCheckService.java
-                            
-            - [수정] src/main/java/com/example/commitwhisper/service/RepoInfoService.java
-                            
+            - [생성] src/main/java/com/example/commitwhisper/security/CustomOAuth2UserService.java
+            - [생성] src/main/java/com/example/commitwhisper/security/OAuth2AuthenticationSuccessHandler.java
+            - [수정] build.gradle
+            - [수정] src/main/java/com/example/commitwhisper/config/SecurityConfig.java
+            - [수정] src/main/java/com/example/commitwhisper/controller/UserController.java
+            - [수정] src/main/java/com/example/commitwhisper/controller/api/v1/ApiUserController.java
+            - [수정] src/main/java/com/example/commitwhisper/entity/User.java
+            - [수정] src/main/java/com/example/commitwhisper/repository/UserRepository.java
+            - [수정] src/main/java/com/example/commitwhisper/security/UserPrincipal.java
             - [수정] src/main/resources/application.yml
-                            
-                            
+            - [수정] src/main/resources/static/css/login.css
+            - [수정] src/main/resources/templates/login.html
+
             ## 변경 내용 요약
-                            
-                            
-            1. **추가된 기능 또는 변경사항**
-                            
-               - 새로운 커밋 상세 정보 조회 기능을 추가했습니다. whisper 커밋의 변경 파일 목록과 패치를 한꺼번에 확인할 수 있어 추적과 분석이 쉬워졌습니다.
-                            
-               - 저장소별 whisper 커밋 시간을 기록하고 관리하는 로직이 추가되었습니다. 이를 통해 이미 처리한 커밋을 재처리하지 않도록 안전하게 관리합니다.
-                            
-               - 응답에서 불필요한 작성자 이름·이메일 정보를 제거해 응답 표기가 간소화되었습니다.
-                            
-               - 개발 편의를 위한 데이터베이스 초기화 설정이 변경되었습니다. startup 시 DB 스키마를 새로 생성(create)하도록 설정되어 있어, 로컬 개발 환경에서의 재구성이 쉬워졌습니다.
-                            
-                            
-                            
-            2. **주요 변화점**
-                            
-               - whisper 커밋 감지 흐름이 시스템에 본격적으로 통합되어, 새로 등장하는 whisper 커밋을 자동으로 식별하고 상세 정보를 수집합니다.
-                            
-               - RepoInfo에 lastWhisperCommitTime 필드가 추가되어 저장소의 최근 처리 시점을 기록합니다. 이로써 중복 처리 방지와 시점 관리가 가능해졌습니다.
-                            
-               - 커밋 상세 정보 조회를 위한 새로운 데이터 구조가 도입되어, 파일별 변경 내용과 패치를 구조적으로 다룰 수 있습니다.
-                            
-               - 시스템 구성(Product/환경) 측면에서 데이터베이스 초기화 방식 변경으로 초기화 영향이 커지므로 배포 시 주의가 필요합니다.
-                            
-                            
-                            
-            3. **팀원이 알아야 할 사항**
-                            
-               - whisper 커밋 감지 로직이 새로 도입되었으므로 저장소별 설정에 따라 동작이 달라질 수 있습니다. 특히 lastWhisperCommitTime이 정확히 업데이트되어야 다음 감지가 정상적으로 이뤄집니다.
-                            
-               - 데이터베이스 초기화 방식이 변경되어 로컬 개발 환경에서 매 실행 시 DB가 재생성될 수 있습니다. 이를 production 환경에 적용할 경우 주의가 필요합니다(필요 시 ddl-auto를 업데이트로 변경 권장).
-                            
-               - 작성자 이름과 이메일 필드의 노출이 제거되었으므로, 외부 시스템이나 UI에서 작성자 정보를 기대하는 부분은 업데이트가 필요할 수 있습니다.
-                            
-               - 커밋 상세 정보가 수집되면서 파일 목록과 패치 내용이 로깅되므로 로그 관리 정책을 확인하고 민감 정보가 로그에 남지 않도록 주의하시기 바랍니다.
+
+            1. 추가된 기능 또는 변경사항
+            - OAuth2.0 기반 소셜 로그인 기능 도입: Google 계정으로의 로그인이 가능해져 사용자의 로그인 흐름이 다양해졌습니다. 이로써 기존 로그인 방식과 함께 외부 인증을 활용할 수 있어 편의성과 보안성이 향상됩니다.
+            - 보안 흐름 구성과 인증 처리의 모듈화: OAuth2 로그인 흐름을 전문 클래스로 분리했고, 로그인 성공/실패 시의 동작을 명확히 제어합니다. 실패 시 로그인 페이지로 리다이렉트하는 안정적인 UX를 제공합니다.
+            - 사용자 데이터 관리 확장: OAuth2 인증을 통해 얻은 정보를 바탕으로 로컬 사용자 기록을 생성하고 연결하는 로직이 추가되었습니다. 이를 통해 외부 인증과 내부 사용자 계정의 매핑이 일관되게 이뤄집니다.
+            - 데이터 모델 및 리포지토리 보강: OAuth2 공급자 정보(provider, providerId, email 등)를 저장하고, 공급자 기반으로 사용자를 조회하는 기능이 추가되어 다중 인증 경로를 안정적으로 지원합니다.
+            - UI/UX 개선 및 로그인 편의성: 로그인 화면에 Google 로그인 버튼을 추가하고, 시각적으로 깔끔하게 구분되는 OAuth 로그인 옵션을 제공해 사용성이 향상됩니다.
+            - 의존성 및 설정 업데이트: OAuth2 클라이언트 의존성을 프로젝트에 추가하고, 애플리케이션 설정에 Google 로그인 정보를 등록하여 외부 인증 기능을 활성화합니다.
+
+            2. 주요 변화점
+            - 코드 구조와 아키텍처의 변화
+              - OAuth2 인증 흐름을 담당하는 신규 서비스와 성공 핸들러를 도입해 보안 로직을 명확하게 분리했습니다.
+              - 사용자 권한 부여와 로그인 흐름에서 OAuth2User를 기존 사용자 정보와 연결하는 방식으로 확장했습니다.
+            - 새로운 의존성 및 라이브러리 추가
+              - OAuth2 클라이언트 의존성을 프로젝트에 포함시키며 Google 계정 로그인을 사용할 수 있게 했습니다.
+            - 설정 파일 변경으로 영향
+              - 외부 인증 공급자(예: Google) 정보를 설정 파일에 등록하여 인증 파이프라인이 정상 작동하도록 했습니다.
+            - 데이터 모델 변화 및 저장 로직
+              - 사용자 엔티티에 인증 공급자 정보와 관련 아이디를 저장하는 필드를 추가하고, OAuth2 사용자도 로컬 계정으로 관리할 수 있도록 저장 로직을 보강했습니다.
+            - 프런트엔드 및 UX 변화
+              - 로그인 화면에 Google 로그인 버튼을 추가하고, 버튼 스타일 및 구분 요소를 개선했습니다. OAuth 로그인 경로도 사용자에게 명확하게 노출됩니다.
+            - 보안 및 접근 제어의 영향
+              - OAuth2 로그인 경로를 허용하는 설정이 추가되어 외부 인증으로의 접근이 활성화되었고, 성공 시 기본 페이지로의 원활한 이동이 가능해졌습니다.
             """;
     }
 }

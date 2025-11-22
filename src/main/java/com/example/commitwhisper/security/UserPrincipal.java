@@ -6,12 +6,16 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
-public class UserPrincipal implements UserDetails, OAuth2User {
+public class UserPrincipal implements UserDetails, OidcUser {
 
     private final UserPrincipalDto userDto;
     private Map<String, Object> attributes;
+    private OidcIdToken idToken;
+    private OidcUserInfo userInfo;
 
     public UserPrincipal(UserPrincipalDto userDto) {
         this.userDto = userDto;
@@ -20,6 +24,13 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     public UserPrincipal(UserPrincipalDto userDto, Map<String, Object> attributes) {
         this.userDto = userDto;
         this.attributes = attributes;
+    }
+
+    public UserPrincipal(UserPrincipalDto userDto, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+        this.userDto = userDto;
+        this.attributes = attributes;
+        this.idToken = idToken;
+        this.userInfo = userInfo;
     }
 
     @Override
@@ -75,6 +86,22 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     @Override
     public String getName() {
         return userDto.name();
+    }
+
+    // OidcUser 인터페이스 구현
+    @Override
+    public Map<String, Object> getClaims() {
+        return attributes != null ? attributes : Collections.emptyMap();
+    }
+
+    @Override
+    public OidcUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    @Override
+    public OidcIdToken getIdToken() {
+        return idToken;
     }
 }
 

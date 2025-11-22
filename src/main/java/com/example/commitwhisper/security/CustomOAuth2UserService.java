@@ -45,7 +45,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private String getProviderId(OAuth2User oAuth2User, String registrationId) {
         if ("google".equals(registrationId)) {
-            return oAuth2User.getAttribute("sub").toString();
+            Object sub = oAuth2User.getAttribute("sub");
+            return sub != null ? sub.toString() : oAuth2User.getName();
         }
         return oAuth2User.getName();
     }

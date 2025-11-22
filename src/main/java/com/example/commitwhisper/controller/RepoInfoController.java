@@ -46,10 +46,6 @@ public class RepoInfoController {
         try {
             GetRepoInfoRes repo = repoInfoService.findById(repoId, userPrincipal.getId());
 
-            // 본인 소유 확인
-            // Note: GetRepoInfoRes에 userId가 없으므로, 서비스에서 확인하거나 별도로 확인 필요
-            // 일단 서비스에서 권한 확인하도록 하고, 여기서는 에러 처리만
-
             LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
                 userPrincipal.getId(),
                 userPrincipal.getLoginId(),

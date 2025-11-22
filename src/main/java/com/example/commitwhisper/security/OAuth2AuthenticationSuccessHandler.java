@@ -23,9 +23,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Authentication authentication) throws IOException, ServletException {
 
         setDefaultTargetUrl("/");
-
-        log.info("OAuth2 로그인 성공: {}", authentication.getPrincipal());
-        
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

@@ -68,7 +68,7 @@ public class UserController {
         @RequestParam(required = false) String message,
         @RequestParam(required = false) String error,
         Model model,
-        @AuthenticationPrincipal(expression = "toUserPrincipal()") UserPrincipal userPrincipal
+        @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         LoginUserRes.UserInfo user = new LoginUserRes.UserInfo(
             userPrincipal.getId(),
