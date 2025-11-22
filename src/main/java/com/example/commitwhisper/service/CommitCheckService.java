@@ -41,7 +41,7 @@ public class CommitCheckService {
 
     private void checkCommitsForRepo(GetRepoInfoRes repo) {
         log.debug("저장소 체크: {}/{} 브랜치: {}", repo.owner(), repo.repo(), repo.triggerBranch());
-        
+        System.out.println("test");
         try {
             List<GitHubCommitRes> commits = githubClient.getCommits(
                     repo.owner(),
