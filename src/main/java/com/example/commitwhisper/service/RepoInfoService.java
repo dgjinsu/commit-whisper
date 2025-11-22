@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,8 @@ public class RepoInfoService {
                 saved.getOwner(),
                 saved.getRepo(),
                 saved.getTriggerBranch(),
-                saved.getDescription()
+                saved.getDescription(),
+                saved.getLastWhisperCommitTime()
         );
     }
 
@@ -48,9 +50,17 @@ public class RepoInfoService {
                         repo.getOwner(),
                         repo.getRepo(),
                         repo.getTriggerBranch(),
-                        repo.getDescription()
+                        repo.getDescription(),
+                        repo.getLastWhisperCommitTime()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateLastWhisperCommitTime(Long repoId, LocalDateTime commitTime) {
+        RepoInfo repoInfo = repoInfoRepository.findById(repoId)
+                .orElseThrow(() -> new IllegalArgumentException("저장소를 찾을 수 없습니다."));
+        repoInfo.updateLastWhisperCommitTime(commitTime);
     }
 }
 

@@ -11,8 +11,6 @@ public record GitHubCommitRes(
     }
 
     public record Author(
-            String name,
-            String email,
             String date
     ) {
     }

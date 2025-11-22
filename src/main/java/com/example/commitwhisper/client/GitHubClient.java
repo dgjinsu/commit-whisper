@@ -1,5 +1,6 @@
 package com.example.commitwhisper.client;
 
+import com.example.commitwhisper.dto.GitHubCommitDetailRes;
 import com.example.commitwhisper.dto.GitHubCommitRes;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,13 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @RequestParam("sha") String branch
+    );
+
+    @GetMapping("/repos/{owner}/{repo}/commits/{sha}")
+    GitHubCommitDetailRes getCommitDetail(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("sha") String sha
     );
 }
 
