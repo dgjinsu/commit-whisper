@@ -138,6 +138,11 @@
             const errorDiv = document.getElementById('signupErrorMessage');
             errorDiv.style.display = 'none';
 
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = '처리 중...';
+
             fetch('/api/v1/users/signup', {
                 method: 'POST',
                 headers: {
@@ -158,16 +163,24 @@
                         messageDiv.remove();
                     }, 5000);
                 } else {
-                    response.text().then(text => {
-                        errorDiv.textContent = text || '회원가입 중 오류가 발생했습니다.';
-                        errorDiv.style.display = 'block';
+                    return response.json().then(data => {
+                        throw new Error(data.message || '회원가입 중 오류가 발생했습니다.');
+                    }).catch(err => {
+                        if (err.message) {
+                            throw err;
+                        }
+                        return response.text().then(text => {
+                            throw new Error(text || '회원가입 중 오류가 발생했습니다.');
+                        });
                     });
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                errorDiv.textContent = '회원가입 중 오류가 발생했습니다.';
+                errorDiv.textContent = error.message || '회원가입 중 오류가 발생했습니다.';
                 errorDiv.style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
             });
         });
     </script>

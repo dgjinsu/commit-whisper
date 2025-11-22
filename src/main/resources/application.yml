@@ -27,3 +27,7 @@ openai:
     key: ${OPENAI_API_KEY:}
   mock:
     enabled: true
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL:}

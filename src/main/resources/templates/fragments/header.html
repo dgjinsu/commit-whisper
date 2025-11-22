@@ -25,12 +25,12 @@
                         <a href="/logout" class="dropdown-item">로그아웃</a>
                     </div>
                 </div>
-                <button class="settings-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <a th:href="@{/settings}" class="settings-button" title="설정">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364 6.364l-4.243-4.243m-4.242 0L5.636 18.364m12.728 0l-4.243-4.243m-4.242 0L5.636 5.636"></path>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </th:block>

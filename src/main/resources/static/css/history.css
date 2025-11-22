@@ -19,27 +19,20 @@
 
 .history-stats {
     margin-bottom: 30px;
+    font-size: 16px;
+    color: #4a5568;
 }
 
-.stat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-    border-radius: 12px;
-    color: white;
-    box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+.history-stats .stat-label {
+    font-size: 16px;
+    color: #718096;
 }
 
-.stat-badge .stat-label {
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.stat-badge .stat-value {
-    font-size: 20px;
-    font-weight: 700;
+.history-stats .stat-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-left: 8px;
 }
 
 .history-list-section {

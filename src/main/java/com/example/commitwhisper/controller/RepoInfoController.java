@@ -30,7 +30,7 @@ public class RepoInfoController {
             userPrincipal.getName()
         );
 
-        List<GetRepoInfoRes> repos = repoInfoService.findAll();
+        List<GetRepoInfoRes> repos = repoInfoService.findAllByUserId(user.id());
         model.addAttribute("user", user);
         model.addAttribute("repos", repos);
         return "repos";
@@ -44,7 +44,7 @@ public class RepoInfoController {
         Model model,
         @AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
-            GetRepoInfoRes repo = repoInfoService.findById(repoId);
+            GetRepoInfoRes repo = repoInfoService.findById(repoId, userPrincipal.getId());
 
             // 본인 소유 확인
             // Note: GetRepoInfoRes에 userId가 없으므로, 서비스에서 확인하거나 별도로 확인 필요

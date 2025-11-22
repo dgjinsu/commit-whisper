@@ -29,73 +29,55 @@ public class ApiRepoInfoController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<GetRepoInfoRes>> getAllRepos() {
-        List<GetRepoInfoRes> repos = repoInfoService.findAll();
+    public ResponseEntity<List<GetRepoInfoRes>> getAllRepos(
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        List<GetRepoInfoRes> repos = repoInfoService.findAllByUserId(userPrincipal.getId());
         return ResponseEntity.ok(repos);
     }
 
     @GetMapping("/{repoId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<GetRepoInfoRes> getRepo(@PathVariable("repoId") Long repoId) {
-        try {
-            GetRepoInfoRes repo = repoInfoService.findById(repoId);
-            return ResponseEntity.ok(repo);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<GetRepoInfoRes> getRepo(
+        @PathVariable("repoId") Long repoId,
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        GetRepoInfoRes repo = repoInfoService.findById(repoId, userPrincipal.getId());
+        return ResponseEntity.ok(repo);
     }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createRepo(
+    public ResponseEntity<GetRepoInfoRes> createRepo(
         @RequestBody CreateRepoInfoReq createReq,
         @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        try {
-            CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
-                userPrincipal.getId(),
-                createReq.owner(),
-                createReq.repo(),
-                createReq.triggerBranch(),
-                createReq.description()
-            );
-            GetRepoInfoRes created = repoInfoService.create(reqWithUserId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
-        }
+        CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
+            userPrincipal.getId(),
+            createReq.owner(),
+            createReq.repo(),
+            createReq.triggerBranch(),
+            createReq.description()
+        );
+        GetRepoInfoRes created = repoInfoService.create(reqWithUserId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{repoId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> updateRepo(
+    public ResponseEntity<GetRepoInfoRes> updateRepo(
         @PathVariable("repoId") Long repoId,
         @RequestBody UpdateRepoInfoReq updateReq,
         @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        try {
-            GetRepoInfoRes updated = repoInfoService.update(repoId, userPrincipal.getId(), updateReq);
-            return ResponseEntity.ok(updated);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("권한")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        GetRepoInfoRes updated = repoInfoService.update(repoId, userPrincipal.getId(), updateReq);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{repoId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> deleteRepo(
+    public ResponseEntity<Void> deleteRepo(
         @PathVariable("repoId") Long repoId,
         @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        try {
-            repoInfoService.delete(repoId, userPrincipal.getId());
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("권한")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        repoInfoService.delete(repoId, userPrincipal.getId());
+        return ResponseEntity.noContent().build();
     }
 }

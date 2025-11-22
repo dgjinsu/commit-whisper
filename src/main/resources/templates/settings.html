@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커휫 - 설정</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
+    <link th:href="@{/css/repos.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>설정</h1>
+            <p class="page-description">알림 설정을 관리하세요</p>
+        </div>
+
+        <!-- Message -->
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        <!-- Slack Webhook Settings -->
+        <div class="form-card">
+            <h2 class="form-title">Slack 알림 설정</h2>
+            <p class="form-description">Slack webhook URL을 설정하면 커밋 요약 알림을 받을 수 있습니다.</p>
+            <form id="slackWebhookForm" class="repo-form">
+                <div class="form-group full-width">
+                    <label for="slackWebhookUrl">Slack Webhook URL</label>
+                    <input 
+                        type="url" 
+                        id="slackWebhookUrl" 
+                        th:value="${settings.slackWebhookUrl() != null ? settings.slackWebhookUrl() : ''}"
+                        placeholder="https://hooks.slack.com/services/...">
+                    <small class="form-hint">
+                        Slack에서 Incoming Webhook을 생성하여 URL을 입력하세요.
+                        <a href="https://api.slack.com/messaging/webhooks" target="_blank" rel="noopener noreferrer">자세히 알아보기</a>
+                    </small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">저장</button>
+                    <button type="button" class="btn-secondary" onclick="clearWebhook()">초기화</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Header Script -->
+    <div th:replace="~{fragments/header :: headerScript}"></div>
+
+    <script>
+        document.getElementById('slackWebhookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const webhookUrl = document.getElementById('slackWebhookUrl').value.trim();
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            
+            // 버튼 비활성화 및 로딩 표시
+            submitButton.disabled = true;
+            submitButton.textContent = '저장 중...';
+
+            fetch('/api/v1/users/settings/slack-webhook', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    slackWebhookUrl: webhookUrl || null
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/settings?message=설정이 저장되었습니다.';
+                } else {
+                    return response.json().then(data => {
+                        throw new Error(data.message || '저장에 실패했습니다.');
+                    }).catch(err => {
+                        if (err.message) {
+                            throw err;
+                        }
+                        return response.text().then(text => {
+                            throw new Error(text || '저장에 실패했습니다.');
+                        });
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('저장 실패: ' + error.message);
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            });
+        });
+
+        function clearWebhook() {
+            if (!confirm('Slack webhook URL을 초기화하시겠습니까?')) {
+                return;
+            }
+
+            document.getElementById('slackWebhookUrl').value = '';
+            document.getElementById('slackWebhookForm').dispatchEvent(new Event('submit'));
+        }
+    </script>
+</body>
+</html>
+

@@ -31,10 +31,18 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(name = "slack_webhook_url", columnDefinition = "TEXT")
+    private String slackWebhookUrl;
+
     public User(String loginId, String password, String name) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
+        this.slackWebhookUrl = null;
+    }
+
+    public void updateSlackWebhookUrl(String slackWebhookUrl) {
+        this.slackWebhookUrl = slackWebhookUrl;
     }
 }
 

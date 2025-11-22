@@ -4,6 +4,7 @@ import com.example.commitwhisper.entity.RepoInfo;
 import com.example.commitwhisper.service.CommitCheckService;
 import com.example.commitwhisper.service.CommitSummaryHistoryService;
 import com.example.commitwhisper.service.OpenAiService;
+import com.example.commitwhisper.service.SlackAlarmService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class CommitScheduler {
     private final CommitCheckService commitCheckService;
     private final OpenAiService openAiService;
     private final CommitSummaryHistoryService commitSummaryHistoryService;
+    private final SlackAlarmService slackAlarmService;
 
     @Scheduled(fixedRate = 600000) // 10분마다 실행
     public void checkCommits() {
@@ -56,7 +58,19 @@ public class CommitScheduler {
                     commitTime
                 );
 
-                // 6. lastWhisperCommitTime 업데이트
+                // 6. Slack 알림 전송 (사용자가 설정한 webhook URL이 있을 경우에만)
+                String slackWebhookUrl = repo.getUser().getSlackWebhookUrl();
+                if (slackWebhookUrl != null && !slackWebhookUrl.isBlank()) {
+                    slackAlarmService.sendCommitSummary(
+                        repo,
+                        whisperCommit.sha(),
+                        summary,
+                        commitTime.toString(),
+                        slackWebhookUrl
+                    );
+                }
+
+                // 7. lastWhisperCommitTime 업데이트
                 commitCheckService.updateLastWhisperCommitTime(repo, commitTime);
             });
     }

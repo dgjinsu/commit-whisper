@@ -49,8 +49,8 @@ public class RepoInfoService {
         );
     }
 
-    public List<GetRepoInfoRes> findAll() {
-        return repoInfoRepository.findAllByOrderByIdDesc().stream()
+    public List<GetRepoInfoRes> findAllByUserId(Long userId) {
+        return repoInfoRepository.findAllByUserIdOrderByIdDesc(userId).stream()
             .map(repo -> new GetRepoInfoRes(
                 repo.getId(),
                 repo.getOwner(),
@@ -109,9 +109,15 @@ public class RepoInfoService {
         repoInfoRepository.delete(repoInfo);
     }
 
-    public GetRepoInfoRes findById(Long repoId) {
+    @Transactional(readOnly = true)
+    public GetRepoInfoRes findById(Long repoId, Long userId) {
         RepoInfo repoInfo = repoInfoRepository.findById(repoId)
             .orElseThrow(() -> new IllegalArgumentException("저장소를 찾을 수 없습니다."));
+
+        // 본인 소유 확인
+        if (!repoInfo.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("저장소를 조회할 권한이 없습니다.");
+        }
 
         return new GetRepoInfoRes(
             repoInfo.getId(),
