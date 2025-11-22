@@ -1,2 +1,2 @@
 # commit-whisper
-커밋된 내용을 요약하여 slack으로 공유해주는 서비스입니다.
+AI 기반 GitHub whisper 커밋 모니터링 및 자동 요약 알림 서비스
