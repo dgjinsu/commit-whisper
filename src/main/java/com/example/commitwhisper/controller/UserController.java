@@ -1,9 +1,11 @@
 package com.example.commitwhisper.controller;
 
+import com.example.commitwhisper.dto.GetCommitSummaryHistoryRes;
 import com.example.commitwhisper.dto.GetRepoInfoRes;
 import com.example.commitwhisper.dto.CreateUserReq;
 import com.example.commitwhisper.dto.LoginUserReq;
 import com.example.commitwhisper.dto.LoginUserRes;
+import com.example.commitwhisper.service.CommitSummaryHistoryService;
 import com.example.commitwhisper.service.RepoInfoService;
 import com.example.commitwhisper.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +25,7 @@ public class UserController {
 
     private final UserService userService;
     private final RepoInfoService repoInfoService;
+    private final CommitSummaryHistoryService historyService;
 
     @GetMapping("/login")
     public String loginPage(HttpSession session, Model model) {
@@ -78,9 +81,12 @@ public class UserController {
         }
         
         List<GetRepoInfoRes> repos = repoInfoService.findAll();
+        List<GetCommitSummaryHistoryRes> recentHistories = historyService.findRecentByUserId(user.id(), 5);
+        
         model.addAttribute("user", user);
         model.addAttribute("repos", repos);
         model.addAttribute("repoCount", repos.size());
+        model.addAttribute("recentHistories", recentHistories);
         return "home";
     }
 }

@@ -31,7 +31,7 @@ public class RepoInfoController {
         List<GetRepoInfoRes> repos = repoInfoService.findAll();
         model.addAttribute("user", user);
         model.addAttribute("repos", repos);
-        model.addAttribute("createReq", new CreateRepoInfoReq("", "", "", ""));
+        model.addAttribute("createReq", new CreateRepoInfoReq(user.id(), "", "", "", ""));
         return "repos";
     }
 
@@ -43,7 +43,15 @@ public class RepoInfoController {
         }
 
         try {
-            repoInfoService.create(createReq);
+            // 현재 로그인한 유저의 ID로 저장소 생성
+            CreateRepoInfoReq reqWithUserId = new CreateRepoInfoReq(
+                    user.id(),
+                    createReq.owner(),
+                    createReq.repo(),
+                    createReq.triggerBranch(),
+                    createReq.description()
+            );
+            repoInfoService.create(reqWithUserId);
             redirectAttributes.addFlashAttribute("message", "저장소가 등록되었습니다.");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

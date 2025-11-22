@@ -3,12 +3,13 @@ package com.example.commitwhisper.service;
 import com.example.commitwhisper.dto.CreateRepoInfoReq;
 import com.example.commitwhisper.dto.GetRepoInfoRes;
 import com.example.commitwhisper.entity.RepoInfo;
+import com.example.commitwhisper.entity.User;
 import com.example.commitwhisper.repository.RepoInfoRepository;
+import com.example.commitwhisper.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class RepoInfoService {
 
     private final RepoInfoRepository repoInfoRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public GetRepoInfoRes create(CreateRepoInfoReq req) {
@@ -25,7 +27,11 @@ public class RepoInfoService {
             throw new IllegalArgumentException("이미 등록된 저장소입니다.");
         }
 
+        User user = userRepository.findById(req.userId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
         RepoInfo repoInfo = new RepoInfo(
+                user,
                 req.owner(),
                 req.repo(),
                 req.triggerBranch(),
@@ -56,11 +62,5 @@ public class RepoInfoService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void updateLastWhisperCommitTime(Long repoId, LocalDateTime commitTime) {
-        RepoInfo repoInfo = repoInfoRepository.findById(repoId)
-                .orElseThrow(() -> new IllegalArgumentException("저장소를 찾을 수 없습니다."));
-        repoInfo.updateLastWhisperCommitTime(commitTime);
-    }
 }
 

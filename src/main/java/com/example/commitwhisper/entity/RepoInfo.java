@@ -18,6 +18,10 @@ public class RepoInfo {
     @Column(name = "repo_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(nullable = false)
     private String owner;
 
@@ -33,7 +37,8 @@ public class RepoInfo {
     @Column(name = "last_whisper_commit_time")
     private LocalDateTime lastWhisperCommitTime;
 
-    public RepoInfo(String owner, String repo, String triggerBranch, String description) {
+    public RepoInfo(User user, String owner, String repo, String triggerBranch, String description) {
+        this.user = user;
         this.owner = owner;
         this.repo = repo;
         this.triggerBranch = triggerBranch;
