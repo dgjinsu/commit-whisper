@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커휫 - 대시보드</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-header">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-label">오늘 알림 발송</div>
+                </div>
+                <div class="stat-value">8회</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-header">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-label">최근 7일 총 사용량</div>
+                </div>
+                <div class="stat-value">68회</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-header">
+                    <div class="stat-icon">💻</div>
+                    <div class="stat-label">연동된 저장소</div>
+                </div>
+                <div class="stat-value" th:text="${repoCount} + '개'">0개</div>
+                <div class="stat-subtitle">활성</div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">일별 사용량</div>
+                <div class="chart-info">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4m0-4h.01"></path>
+                    </svg>
+                    최근 7일간 LLM 호출 횟수
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                차트 영역
+            </div>
+            <div class="chart-dates">
+                <div class="chart-date">1/15</div>
+                <div class="chart-date">1/14</div>
+                <div class="chart-date">1/13</div>
+                <div class="chart-date">1/12</div>
+                <div class="chart-date">1/11</div>
+                <div class="chart-date">1/10</div>
+                <div class="chart-date">1/9</div>
+            </div>
+        </div>
+
+        <!-- Bottom Sections -->
+        <div class="bottom-grid">
+            <!-- Active Repositories -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-title">활성 저장소</div>
+                    <a th:href="@{/repos}" class="section-link">관리 →</a>
+                </div>
+                <div th:if="${repos != null && !repos.isEmpty()}">
+                    <div th:each="repo : ${repos}" class="repo-item">
+                        <div class="repo-icon">📁</div>
+                        <div class="repo-info">
+                            <div class="repo-name" th:text="${repo.owner + '/' + repo.repo}">owner/repo</div>
+                            <div class="repo-branch" th:text="'브랜치: ' + ${repo.triggerBranch}">브랜치: main</div>
+                        </div>
+                        <div class="repo-time">
+                            <span class="status-dot"></span>
+                            활성
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${repos == null || repos.isEmpty()}" class="empty-repos">
+                    <p class="empty-text">등록된 저장소가 없습니다.</p>
+                </div>
+            </div>
+
+            <!-- Recent Notifications -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-title">최근 알림 내역</div>
+                    <a href="#" class="section-link">전체보기 →</a>
+                </div>
+                <div class="empty-notifications">
+                    <p class="empty-text">알림 내역이 없습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <button class="floating-button" title="Talk with Us">
+        🎧
+    </button>
+
+    <div th:replace="~{fragments/header :: headerScript}"></div>
+</body>
+</html>

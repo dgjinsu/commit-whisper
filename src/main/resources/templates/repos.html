@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커휫 - 저장소 관리</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
+    <link th:href="@{/css/repos.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>저장소 관리</h1>
+            <p class="page-description">GitHub 저장소를 등록하고 관리하세요</p>
+        </div>
+
+        <!-- Message -->
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        <!-- Add Repository Form -->
+        <div class="form-card">
+            <h2 class="form-title">새 저장소 등록</h2>
+            <form th:action="@{/repos}" th:object="${createReq}" method="post" class="repo-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="owner">Owner</label>
+                        <input type="text" id="owner" th:field="*{owner}" placeholder="예: octocat" required>
+                        <small class="form-hint">GitHub 사용자명 또는 조직명</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="repo">Repository</label>
+                        <input type="text" id="repo" th:field="*{repo}" placeholder="예: Hello-World" required>
+                        <small class="form-hint">저장소 이름</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="triggerBranch">Trigger Branch</label>
+                        <input type="text" id="triggerBranch" th:field="*{triggerBranch}" placeholder="예: main" required>
+                        <small class="form-hint">커밋 알림을 받을 브랜치</small>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="description">Description</label>
+                        <textarea id="description" th:field="*{description}" placeholder="저장소에 대한 설명을 입력하세요" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">저장소 등록</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Repository List -->
+        <div class="repo-list-section">
+            <h2 class="section-title">등록된 저장소</h2>
+            <div th:if="${repos != null && !repos.isEmpty()}" class="repo-list">
+                <div th:each="repo : ${repos}" class="repo-card">
+                    <div class="repo-card-header">
+                        <div class="repo-icon-large">📁</div>
+                        <div class="repo-card-info">
+                            <div class="repo-card-name">
+                                <span th:text="${repo.owner}"></span>
+                                <span>/</span>
+                                <span th:text="${repo.repo}"></span>
+                            </div>
+                            <div class="repo-card-branch">
+                                <span class="branch-label">브랜치:</span>
+                                <span th:text="${repo.triggerBranch}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${repo.description != null && !repo.description.isEmpty()}" class="repo-card-description" th:text="${repo.description}"></div>
+                </div>
+            </div>
+            <div th:if="${repos == null || repos.isEmpty()}" class="empty-state">
+                <div class="empty-icon">📦</div>
+                <p class="empty-text">등록된 저장소가 없습니다.</p>
+                <p class="empty-hint">위의 폼을 사용하여 저장소를 등록하세요.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Script -->
+    <div th:replace="~{fragments/header :: headerScript}"></div>
+</body>
+</html>
+

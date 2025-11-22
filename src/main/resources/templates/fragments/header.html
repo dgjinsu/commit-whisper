@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="header(user)">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <a th:href="@{/}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                    <div class="logo-icon">💬</div>
+                    <div class="logo-text">커휫</div>
+                </a>
+            </div>
+            <div class="header-right" th:if="${user != null}">
+                <div class="user-dropdown" id="userDropdown">
+                    <button class="user-button" onclick="toggleDropdown()">
+                        <div class="user-avatar" th:text="${user.name != null ? user.name.substring(0, 1) : 'U'}"></div>
+                        <span th:text="${user.name}"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="/logout" class="dropdown-item">로그아웃</a>
+                    </div>
+                </div>
+                <button class="settings-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364 6.364l-4.243-4.243m-4.242 0L5.636 18.364m12.728 0l-4.243-4.243m-4.242 0L5.636 5.636"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="headerScript">
+        <script>
+            function toggleDropdown() {
+                const dropdown = document.getElementById('userDropdown');
+                dropdown.classList.toggle('active');
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>
+
