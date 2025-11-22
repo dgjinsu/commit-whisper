@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커휫 - 커밋 요약 상세</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
     <link th:href="@{/css/home.css}" rel="stylesheet">
     <link th:href="@{/css/history.css}" rel="stylesheet">
     <style>
@@ -13,11 +14,12 @@
         }
 
         .detail-header {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 24px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--border-light);
         }
 
         .detail-header-top {
@@ -68,20 +70,25 @@
         }
 
         .detail-body {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 24px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--border-light);
         }
 
         .detail-summary-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #8b5cf6;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 3px solid;
+            border-image: linear-gradient(135deg, #818cf8 0%, #6366f1 100%) 1;
         }
 
         .detail-summary-content {
@@ -103,18 +110,20 @@
         .back-button {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #8b5cf6;
-            color: white;
+            gap: var(--spacing-sm);
+            padding: 12px 24px;
+            background: var(--primary-gradient);
+            color: var(--text-inverse);
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.2s;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
         }
 
         .back-button:hover {
-            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .commit-date-section {
@@ -127,6 +136,32 @@
 
         .commit-date-label {
             font-weight: 500;
+        }
+
+        .github-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 10px 20px;
+            background: #24292e;
+            color: var(--text-inverse);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .github-button:hover {
+            background: #2f363d;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .github-button::before {
+            content: "🔗";
+            font-size: 16px;
         }
     </style>
 </head>
@@ -165,6 +200,12 @@
             <div class="detail-footer">
                 <a th:href="@{/history}" class="back-button">
                     ← 목록으로 돌아가기
+                </a>
+                <a th:href="@{'https://github.com/' + ${history.repoOwner()} + '/' + ${history.repoName()} + '/commit/' + ${history.commitSha()}}" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="github-button">
+                    GitHub에서 보기
                 </a>
             </div>
         </div>

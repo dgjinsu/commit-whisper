@@ -1,3 +1,5 @@
+@import url('common.css');
+
 /* History Page Styles */
 
 .page-header {
@@ -46,17 +48,36 @@
 }
 
 .history-card {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e7eb;
-    transition: all 0.3s ease;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.history-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-gradient);
+    transform: scaleY(0);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-card:hover::before {
+    transform: scaleY(1);
 }
 
 .history-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-6px);
+    border-color: #c7d2fe;
 }
 
 .history-card-header {
@@ -258,11 +279,12 @@
 }
 
 .pagination-btn.active {
-    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-    border-color: #8b5cf6;
-    color: white;
+    background: var(--primary-gradient);
+    border-color: transparent;
+    color: var(--text-inverse);
     font-weight: 600;
-    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+    box-shadow: var(--shadow-md);
+    transform: scale(1.05);
 }
 
 .pagination-btn.disabled {

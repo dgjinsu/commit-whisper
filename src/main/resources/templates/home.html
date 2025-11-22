@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커휫 - 대시보드</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
     <link th:href="@{/css/home.css}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -157,14 +158,14 @@
                         datasets: [{
                             label: 'LLM 호출 횟수',
                             data: counts,
-                            borderColor: '#8b5cf6',
-                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderColor: '#818cf8',
+                            backgroundColor: 'rgba(199, 210, 254, 0.2)',
                             borderWidth: 3,
                             fill: true,
                             tension: 0.4,
                             pointRadius: maxCount > 50 ? 3 : 5,
                             pointHoverRadius: maxCount > 50 ? 5 : 7,
-                            pointBackgroundColor: '#8b5cf6',
+                            pointBackgroundColor: '#818cf8',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2
                         }]

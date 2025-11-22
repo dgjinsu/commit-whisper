@@ -56,6 +56,9 @@ dependencies {
     
     // QueryDSL core (JPAQueryFactory를 위해 필요)
     implementation 'com.querydsl:querydsl-core:5.1.0'
+
+    // devtools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {
