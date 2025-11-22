@@ -285,14 +285,13 @@ body {
     font-size: 12px;
 }
 
-.chart-placeholder {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-    border: 2px dashed #e0e0e0;
-    border-radius: 12px;
+.chart-placeholder,
+#usageChart {
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+    width: 100%;
+    display: block;
 }
 
 .chart-dates {

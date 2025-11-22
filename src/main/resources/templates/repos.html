@@ -94,11 +94,7 @@
     <!-- Header Script -->
     <div th:replace="~{fragments/header :: headerScript}"></div>
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        const csrfToken = /*[[${_csrf.token}]]*/ '';
-        const csrfHeader = /*[[${_csrf.headerName}]]*/ '';
-
+    <script>
         document.getElementById('createRepoForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -112,7 +108,6 @@
             fetch('/api/v1/repos', {
                 method: 'POST',
                 headers: {
-                    [csrfHeader]: csrfToken,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(createData)
@@ -140,7 +135,6 @@
             fetch('/api/v1/repos/' + repoId, {
                 method: 'DELETE',
                 headers: {
-                    [csrfHeader]: csrfToken,
                     'Content-Type': 'application/json'
                 }
             })
@@ -158,7 +152,6 @@
                 alert('삭제 중 오류가 발생했습니다.');
             });
         }
-        /*]]>*/
     </script>
 </body>
 </html>

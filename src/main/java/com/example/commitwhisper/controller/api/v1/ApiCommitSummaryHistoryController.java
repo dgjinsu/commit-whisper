@@ -1,6 +1,7 @@
 package com.example.commitwhisper.controller.api.v1;
 
 import com.example.commitwhisper.dto.history.GetCommitSummaryHistoryRes;
+import com.example.commitwhisper.dto.history.GetDailyUsageRes;
 import com.example.commitwhisper.dto.history.GetHistoryDetailRes;
 import com.example.commitwhisper.security.UserPrincipal;
 import com.example.commitwhisper.service.CommitSummaryHistoryService;
@@ -65,5 +66,14 @@ public class ApiCommitSummaryHistoryController {
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<GetCommitSummaryHistoryRes> histories = historyService.findRecentByUserId(userPrincipal.getId(), limit);
         return ResponseEntity.ok(histories);
+    }
+
+    @GetMapping("/daily-usage")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<GetDailyUsageRes>> getDailyUsage(
+            @RequestParam(defaultValue = "7") int days,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        List<GetDailyUsageRes> dailyUsage = historyService.findDailyUsageByUserId(userPrincipal.getId(), days);
+        return ResponseEntity.ok(dailyUsage);
     }
 }

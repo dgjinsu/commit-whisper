@@ -64,8 +64,6 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const csrfToken = /*[[${_csrf.token}]]*/ '';
-        const csrfHeader = /*[[${_csrf.headerName}]]*/ '';
         const repoId = /*[[${repo.id()}]]*/ 0;
 
         document.getElementById('updateForm').addEventListener('submit', function(e) {
@@ -81,7 +79,6 @@
             fetch('/api/v1/repos/' + repoId, {
                 method: 'PUT',
                 headers: {
-                    [csrfHeader]: csrfToken,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(updateData)

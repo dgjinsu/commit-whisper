@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커휫 - 대시보드</title>
     <link th:href="@{/css/home.css}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -19,14 +20,14 @@
                     <div class="stat-icon">📅</div>
                     <div class="stat-label">오늘 알림 발송</div>
                 </div>
-                <div class="stat-value">8회</div>
+                <div class="stat-value" th:text="${todayCount} + '회'">0회</div>
             </div>
             <div class="stat-card purple">
                 <div class="stat-header">
                     <div class="stat-icon">📊</div>
                     <div class="stat-label">최근 7일 총 사용량</div>
                 </div>
-                <div class="stat-value">68회</div>
+                <div class="stat-value" th:text="${lastWeekCount} + '회'">0회</div>
             </div>
             <div class="stat-card green">
                 <div class="stat-header">
@@ -50,18 +51,10 @@
                     최근 7일간 LLM 호출 횟수
                 </div>
             </div>
-            <div class="chart-placeholder">
-                차트 영역
+            <div style="height: 200px; position: relative;">
+                <canvas id="usageChart" style="height: 200px !important; max-height: 200px !important;"></canvas>
             </div>
-            <div class="chart-dates">
-                <div class="chart-date">1/15</div>
-                <div class="chart-date">1/14</div>
-                <div class="chart-date">1/13</div>
-                <div class="chart-date">1/12</div>
-                <div class="chart-date">1/11</div>
-                <div class="chart-date">1/10</div>
-                <div class="chart-date">1/9</div>
-            </div>
+            <div class="chart-dates" id="chartDates"></div>
         </div>
 
         <!-- Bottom Sections -->
@@ -119,5 +112,121 @@
     </button>
 
     <div th:replace="~{fragments/header :: headerScript}"></div>
+
+    <script>
+        // 일별 사용량 차트 그리기
+        fetch('/api/v1/history/daily-usage?days=7')
+            .then(response => response.json())
+            .then(data => {
+                const dates = data.map(item => {
+                    const date = new Date(item.date);
+                    return (date.getMonth() + 1) + '/' + date.getDate();
+                });
+                const counts = data.map(item => item.count);
+
+                // 최대값 계산
+                const maxCount = Math.max(...counts, 1);
+                
+                // stepSize 자동 계산 (최대값에 따라 적절한 간격 설정)
+                let stepSize = 1;
+                if (maxCount > 100) {
+                    stepSize = Math.ceil(maxCount / 10);
+                } else if (maxCount > 50) {
+                    stepSize = Math.ceil(maxCount / 8);
+                } else if (maxCount > 20) {
+                    stepSize = Math.ceil(maxCount / 6);
+                } else if (maxCount > 10) {
+                    stepSize = 2;
+                }
+
+                // 날짜 표시
+                const chartDatesDiv = document.getElementById('chartDates');
+                chartDatesDiv.innerHTML = dates.map(date => `<div class="chart-date">${date}</div>`).join('');
+
+                // 차트 그리기
+                const canvas = document.getElementById('usageChart');
+                canvas.style.height = '200px';
+                canvas.style.maxHeight = '200px';
+                canvas.style.minHeight = '200px';
+                
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'LLM 호출 횟수',
+                            data: counts,
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: maxCount > 50 ? 3 : 5,
+                            pointHoverRadius: maxCount > 50 ? 5 : 7,
+                            pointBackgroundColor: '#8b5cf6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        aspectRatio: 0,
+                        layout: {
+                            padding: {
+                                top: 10,
+                                bottom: 10
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                titleFont: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                bodyFont: {
+                                    size: 13
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        return '호출 횟수: ' + context.parsed.y + '회';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: maxCount > 0 ? Math.ceil(maxCount * 1.1) : 10,
+                                ticks: {
+                                    stepSize: stepSize,
+                                    font: {
+                                        size: 11
+                                    },
+                                    callback: function(value) {
+                                        return value;
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('차트 데이터 로드 실패:', error);
+            });
+    </script>
 </body>
 </html>

@@ -32,10 +32,6 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/signup")
-    public String signupPage() {
-        return "signup";
-    }
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
@@ -50,11 +46,15 @@ public class UserController {
 
         List<GetRepoInfoRes> repos = repoInfoService.findAll();
         List<GetCommitSummaryHistoryRes> recentHistories = historyService.findRecentByUserId(user.id(), 5);
+        long todayCount = historyService.countTodayByUserId(user.id());
+        long lastWeekCount = historyService.countLastWeekByUserId(user.id());
 
         model.addAttribute("user", user);
         model.addAttribute("repos", repos);
         model.addAttribute("repoCount", repos.size());
         model.addAttribute("recentHistories", recentHistories);
+        model.addAttribute("todayCount", todayCount);
+        model.addAttribute("lastWeekCount", lastWeekCount);
         return "home";
     }
 }
