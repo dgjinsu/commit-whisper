@@ -1,5 +1,6 @@
 package com.example.commitwhisper.client;
 
+import com.example.commitwhisper.config.GitHubClientConfig;
 import com.example.commitwhisper.dto.github.GitHubCommitDetailRes;
 import com.example.commitwhisper.dto.github.GitHubCommitRes;
 import java.util.List;
@@ -8,7 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "github", url = "https://api.github.com")
+@FeignClient(
+    name = "github",
+    url = "https://api.github.com",
+    configuration = GitHubClientConfig.class
+)
 public interface GitHubClient {
 
     @GetMapping("/repos/{owner}/{repo}/commits")

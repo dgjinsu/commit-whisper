@@ -54,3 +54,6 @@ openai:
 slack:
   webhook:
     url: ${SLACK_WEBHOOK_URL:}
+
+github:
+  token: ${GITHUB_TOKEN:}
