@@ -2,16 +2,24 @@ package com.example.commitwhisper.security;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final UserPrincipalDto userDto;
+    private Map<String, Object> attributes;
 
     public UserPrincipal(UserPrincipalDto userDto) {
         this.userDto = userDto;
+    }
+
+    public UserPrincipal(UserPrincipalDto userDto, Map<String, Object> attributes) {
+        this.userDto = userDto;
+        this.attributes = attributes;
     }
 
     @Override
@@ -53,12 +61,21 @@ public class UserPrincipal implements UserDetails {
         return userDto.id();
     }
 
-    public String getName() {
-        return userDto.name();
-    }
-
     public String getLoginId() {
         return userDto.loginId();
     }
+
+    // OAuth2User 인터페이스 구현
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes != null ? attributes : Collections.emptyMap();
+    }
+
+    // OAuth2User.getName()과 UserDetails의 사용자 이름을 통합
+    @Override
+    public String getName() {
+        return userDto.name();
+    }
 }
+
 

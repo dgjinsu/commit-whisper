@@ -33,7 +33,8 @@ public class ApiUserController {
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<LoginUserRes.UserInfo> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<LoginUserRes.UserInfo> getCurrentUser(
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         LoginUserRes.UserInfo userInfo = new LoginUserRes.UserInfo(
             userPrincipal.getId(),
             userPrincipal.getLoginId(),
@@ -45,7 +46,8 @@ public class ApiUserController {
 
     @GetMapping("/settings")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<GetUserSettingsRes> getSettings(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<GetUserSettingsRes> getSettings(
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
         GetUserSettingsRes settings = userService.getSettings(userPrincipal.getId());
         return ResponseEntity.ok(settings);
     }

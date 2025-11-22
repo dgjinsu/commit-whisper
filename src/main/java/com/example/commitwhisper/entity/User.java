@@ -25,20 +25,40 @@ public class User {
     @Column(nullable = false, unique = true)
     private String loginId;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     private String name;
 
     @Column(name = "slack_webhook_url", columnDefinition = "TEXT")
     private String slackWebhookUrl;
+
+    @Column(name = "provider")
+    private String provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "email")
+    private String email;
 
     public User(String loginId, String password, String name) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.slackWebhookUrl = null;
+        this.provider = "local";
+        this.providerId = null;
+        this.email = null;
+    }
+
+    public User(String loginId, String name, String provider, String providerId, String email) {
+        this.loginId = loginId;
+        this.password = null; // OAuth2 사용자는 password 없음
+        this.name = name;
+        this.slackWebhookUrl = null;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.email = email;
     }
 
     public void updateSlackWebhookUrl(String slackWebhookUrl) {
