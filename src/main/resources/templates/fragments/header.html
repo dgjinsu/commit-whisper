@@ -9,6 +9,11 @@
                     <div class="logo-icon">💬</div>
                     <div class="logo-text">커휫</div>
                 </a>
+                <nav class="header-nav" th:if="${user != null}">
+                    <a th:href="@{/}" class="nav-link">대시보드</a>
+                    <a th:href="@{/repos}" class="nav-link">저장소</a>
+                    <a th:href="@{/history}" class="nav-link">이력</a>
+                </nav>
             </div>
             <div class="header-right" th:if="${user != null}">
                 <div class="user-dropdown" id="userDropdown">

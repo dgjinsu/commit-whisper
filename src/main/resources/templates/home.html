@@ -90,14 +90,24 @@
                 </div>
             </div>
 
-            <!-- Recent Notifications -->
+            <!-- Recent History -->
             <div class="section-card">
                 <div class="section-header">
-                    <div class="section-title">최근 알림 내역</div>
-                    <a href="#" class="section-link">전체보기 →</a>
+                    <div class="section-title">최근 커밋 요약</div>
+                    <a th:href="@{/history}" class="section-link">전체보기 →</a>
                 </div>
-                <div class="empty-notifications">
-                    <p class="empty-text">알림 내역이 없습니다.</p>
+                <div th:if="${recentHistories != null && !recentHistories.isEmpty()}">
+                    <a th:each="history : ${recentHistories}" th:href="@{/history/{id}(id=${history.id()})}" class="history-item" style="text-decoration: none; display: block;">
+                        <div class="history-item-header">
+                            <div class="history-item-repo" th:text="${history.repoOwner() + '/' + history.repoName()}"></div>
+                            <div class="history-item-time" th:text="${#temporals.format(history.createdAt(), 'MM/dd HH:mm')}"></div>
+                        </div>
+                        <div class="history-item-sha" th:text="'SHA: ' + ${history.commitSha().substring(0, 7)}"></div>
+                        <div class="history-item-preview" th:text="${#strings.abbreviate(history.summary(), 80)}"></div>
+                    </a>
+                </div>
+                <div th:if="${recentHistories == null || recentHistories.isEmpty()}" class="empty-notifications">
+                    <p class="empty-text">아직 생성된 커밋 요약이 없습니다.</p>
                 </div>
             </div>
         </div>

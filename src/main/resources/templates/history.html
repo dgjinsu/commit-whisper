@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커휫 - 커밋 요약 이력</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
+    <link th:href="@{/css/history.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header(user=${user})}"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>커밋 요약 이력</h1>
+            <p class="page-description">LLM으로 생성된 커밋 요약 이력을 확인하세요</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="history-stats">
+            <div class="stat-badge">
+                <span class="stat-label">총 이력</span>
+                <span class="stat-value" th:text="${historyCount} + '개'">0개</span>
+            </div>
+        </div>
+
+        <!-- History List -->
+        <div class="history-list-section">
+            <div th:if="${histories != null && !histories.isEmpty()}" class="history-list">
+                <a th:each="history : ${histories}" th:href="@{/history/{id}(id=${history.id()})}" class="history-card" style="text-decoration: none; display: block; color: inherit;">
+                    <div class="history-card-header">
+                        <div class="history-repo-info">
+                            <div class="repo-badge">
+                                <span class="repo-icon">📁</span>
+                                <span class="repo-name" th:text="${history.repoOwner() + '/' + history.repoName()}"></span>
+                            </div>
+                            <div class="commit-sha" th:text="'SHA: ' + ${history.commitSha().substring(0, 7)}"></div>
+                        </div>
+                        <div class="history-date">
+                            <span class="date-label">요약 생성일</span>
+                            <span class="date-value" th:text="${#temporals.format(history.createdAt(), 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="history-card-body">
+                        <div class="summary-content" th:utext="${#strings.abbreviate(history.htmlSummary(), 200)}"></div>
+                    </div>
+                    
+                    <div class="history-card-footer">
+                        <div class="commit-date-info">
+                            <span class="commit-date-label">커밋 날짜</span>
+                            <span class="commit-date-value" th:text="${#temporals.format(history.commitDate(), 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div th:if="${histories == null || histories.isEmpty()}" class="empty-state">
+                <div class="empty-icon">📝</div>
+                <p class="empty-text">아직 생성된 커밋 요약이 없습니다.</p>
+                <p class="empty-hint">whisper 커밋이 감지되면 자동으로 요약이 생성됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Script -->
+    <div th:replace="~{fragments/header :: headerScript}"></div>
+</body>
+</html>
+
